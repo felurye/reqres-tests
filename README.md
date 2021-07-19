@@ -18,11 +18,12 @@ Acesse a pasta do repositório
 
 >``cd reqres-tests``
 
-Instale as dependencias do Maven
+Instale as dependências do Maven
 
 >``mvn clean install``
 
-Na IDE de sua preferencia execute os testes desejados.
+Na IDE de sua preferência execute os testes desejados.
+
 
 Para gerar o relatório do Allure Report
 
