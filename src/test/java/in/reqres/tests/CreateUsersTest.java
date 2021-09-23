@@ -5,13 +5,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.util.Map;
-
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import in.reqres.data.Data;
 import in.reqres.factories.UserDataFactory;
 import in.reqres.pojo.UserPojo;
 import in.reqres.utils.BaseAPI;
@@ -20,36 +17,9 @@ import io.restassured.response.Response;
 
 public class CreateUsersTest extends BaseAPI{
 
-	/**
-	 * Realiza a requisição com o uso do método Map do java.util
-	 * usando parâmetros já definidos na classe.
-	 */
 	@Test
-	@SuppressWarnings("rawtypes")
-	@DisplayName("Create User Successfully With Map")
-	public void createUserSuccessfullyWithMap() {
-		Data data = new Data();
-		Map dataUser = data.createUser();
-				
-		given()
-			.contentType(ContentType.JSON)
-			.body(dataUser)
-		.when()
-			.post("/users")
-		.then()
-			.log().all()
-			.body("id", notNullValue())
-			.body("createdAt", notNullValue())
-			.statusCode(HttpStatus.SC_CREATED);
-	}
-	
-	/**
-	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
-	 * informados são gerados aleatoriamente com usa da biblioteca Faker.
-	 */
-	@Test
-	@DisplayName("Create User Successfully With Pojo")
-	public void createUserSuccessfullyWithPojo() {
+	@DisplayName("Create User Successfully")
+	public void createUserSuccessfully() {
 		UserPojo user = new UserDataFactory().user();
 		
 		Response res =
@@ -67,12 +37,6 @@ public class CreateUsersTest extends BaseAPI{
 			.statusCode(HttpStatus.SC_CREATED);
 	}
 	
-	
-	/**
-	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
-	 * informados são gerados aleatoriamente com usa da biblioteca Faker
-	 * com adição de caracteres para validar aceitação.
-	 */
 	@Test
 	@DisplayName("Create User Successfully With Caracter")
 	public void createUserSuccessfullyWithCaracter() {
@@ -92,13 +56,7 @@ public class CreateUsersTest extends BaseAPI{
 			.body("job", equalTo(user.getJob()))
 			.statusCode(HttpStatus.SC_CREATED);
 	}
-	
-	
-	/**
-	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
-	 * informados são gerados aleatoriamente com usa da biblioteca Faker
-	 * e o parâmentro name é passado nulo para validar aceitação.
-	 */
+
 	@Test
 	@DisplayName("Validate Register Without Name")
 	public void validateRegisterWithoutName() {
