@@ -1,4 +1,4 @@
-package in.reqres.Utils;
+package in.reqres.utils;
 
 import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.baseURI;
@@ -12,5 +12,4 @@ public class BaseAPI {
 		baseURI = "https://reqres.in";
 		basePath = "/api";
 	}
-
 }
