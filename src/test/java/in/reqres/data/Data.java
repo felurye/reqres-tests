@@ -1,10 +1,9 @@
-package in.reqres.Data;
+package in.reqres.data;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Data {
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map createUser() {
 		Map<String, Object> params = new HashMap();

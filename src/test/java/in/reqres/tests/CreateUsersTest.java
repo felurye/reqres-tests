@@ -1,7 +1,9 @@
-package in.reqres.Tests;
+package in.reqres.tests;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.Map;
 
@@ -9,15 +11,14 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.github.javafaker.Faker;
-
-import in.reqres.Data.Data;
-import in.reqres.Model.UserModel;
-import in.reqres.Utils.BaseAPI;
+import in.reqres.data.Data;
+import in.reqres.factories.UserDataFactory;
+import in.reqres.pojo.UserPojo;
+import in.reqres.utils.BaseAPI;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class CreateTest extends BaseAPI{
+public class CreateUsersTest extends BaseAPI{
 
 	/**
 	 * Realiza a requisição com o uso do método Map do java.util
@@ -43,17 +44,13 @@ public class CreateTest extends BaseAPI{
 	}
 	
 	/**
-	 * Realiza a requisição com o uso de uma Model, ondem os parâmetros
+	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
 	 * informados são gerados aleatoriamente com usa da biblioteca Faker.
 	 */
 	@Test
-	@DisplayName("Create User Successfully With Model")
-	public void createUserSuccessfullyWithModel() {
-		final Faker faker = new Faker();
-		UserModel user = new UserModel();
-		
-		user.setName(faker.funnyName().name()); 
-		user.setJob(faker.job().title()); 
+	@DisplayName("Create User Successfully With Pojo")
+	public void createUserSuccessfullyWithPojo() {
+		UserPojo user = new UserDataFactory().user();
 		
 		Response res =
 		given()
@@ -65,29 +62,22 @@ public class CreateTest extends BaseAPI{
 			.log().all()
 			.body("id", notNullValue())
 			.body("createdAt", notNullValue())
-			.body("name", containsString(user.getName()))
-			.body("job", containsString(user.getJob()))
+			.body("name", equalTo(user.getName()))
+			.body("job", equalTo(user.getJob()))
 			.statusCode(HttpStatus.SC_CREATED);
-		
-		user.setId(res.jsonPath().getString("id"));
-		user.setCreatedAt(res.jsonPath().getString("createdAt"));
 	}
 	
 	
 	/**
-	 * Realiza a requisição com o uso de uma Model, ondem os parâmetros
+	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
 	 * informados são gerados aleatoriamente com usa da biblioteca Faker
 	 * com adição de caracteres para validar aceitação.
 	 */
 	@Test
 	@DisplayName("Create User Successfully With Caracter")
 	public void createUserSuccessfullyWithCaracter() {
-		final Faker faker = new Faker();
-		UserModel user = new UserModel();
-		
-		user.setName(faker.name().name() + "*&$%'"); 
-		user.setJob(faker.job().title() + "*&$%'"); 
-		
+		UserPojo user = new UserDataFactory().userWithCaracter();
+	
 		Response res =
 		given()
 			.contentType(ContentType.JSON)
@@ -98,29 +88,21 @@ public class CreateTest extends BaseAPI{
 			.log().all()
 			.body("id", notNullValue())
 			.body("createdAt", notNullValue())
-			.body("name", containsString(user.getName()))
-			.body("job", containsString(user.getJob()))
+			.body("name", equalTo(user.getName()))
+			.body("job", equalTo(user.getJob()))
 			.statusCode(HttpStatus.SC_CREATED);
-		
-		user.setId(res.jsonPath().getString("id"));
-		user.setCreatedAt(res.jsonPath().getString("createdAt"));
 	}
 	
 	
 	/**
-	 * Realiza a requisição com o uso de uma Model, ondem os parâmetros
+	 * Realiza a requisição com o uso de um Pojo, ondem os parâmetros
 	 * informados são gerados aleatoriamente com usa da biblioteca Faker
 	 * e o parâmentro name é passado nulo para validar aceitação.
 	 */
 	@Test
 	@DisplayName("Validate Register Without Name")
 	public void validateRegisterWithoutName() {
-		final Faker faker = new Faker();
-		UserModel user = new UserModel();
-		
-		user.setName(null); 
-		user.setJob(faker.job().title()); 
-				
+		UserPojo user = new UserDataFactory().userWithoutName();
 		given()
 			.contentType(ContentType.JSON)
 			.body(user)
@@ -131,7 +113,7 @@ public class CreateTest extends BaseAPI{
 			.body("id", notNullValue())
 			.body("createdAt", notNullValue())
 			.body("name", nullValue())
-			.body("job", containsString(user.getJob()))
+			.body("job", equalTo(user.getJob()))
 			.statusCode(HttpStatus.SC_CREATED);
 	}
 }
